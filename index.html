@@ -1,49 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Project Gamba Tournament</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectGamba Tournament</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">Project<span>Gamba</span> <br><small>TOURNAMENT</small></h1>
+    <div class="background-animation"></div>
 
-    <div class="bracket">
-      <div class="round">
-        <div class="match">P1</div>
-        <div class="match">P2</div>
-        <div class="match">P3</div>
-        <div class="match">P4</div>
-        <div class="match">P5</div>
-        <div class="match">P6</div>
-        <div class="match">P7</div>
-        <div class="match">P8</div>
-      </div>
+    <div class="container">
+        <h1 class="title">ProjectGamba <span class="tournament-text">TOURNAMENT</span></h1>
 
-      <div class="round">
-        <div class="match">W1</div>
-        <div class="match">W2</div>
-        <div class="match">W3</div>
-        <div class="match">W4</div>
-      </div>
+        <div class="bracket-grid">
+            <div class="round round-1">
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Player 1">
+                    <input type="text" class="player-input" placeholder="Player 2">
+                </div>
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Player 3">
+                    <input type="text" class="player-input" placeholder="Player 4">
+                </div>
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Player 5">
+                    <input type="text" class="player-input" placeholder="Player 6">
+                </div>
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Player 7">
+                    <input type="text" class="player-input" placeholder="Player 8">
+                </div>
+            </div>
 
-      <div class="round">
-        <div class="match">Q1</div>
-        <div class="match">Q2</div>
-      </div>
+            <div class="round round-2">
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Winner R1A">
+                </div>
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Winner R1B">
+                </div>
+            </div>
 
-      <div class="round">
-        <div class="match">🏆</div>
-      </div>
+            <div class="round final-round">
+                <div class="match">
+                    <input type="text" class="player-input" placeholder="Champion">
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="logo-section">
+                <img src="https://i.imgur.com/your-project-gamba-logo.png" alt="Project Gamba Logo" class="gamba-logo">
+                </div>
+            <div class="code-section">
+                <p class="use-code-text">USE CODE</p>
+                <p class="promo-code">ProjectGamba</p>
+                <p class="boost-text">20%<br>EXPERIENCE BOOST</p>
+            </div>
+        </div>
     </div>
 
-    <div class="sidebar">
-      <img src="https://i.ibb.co/Cw1PYSL/gamba-logo.png" class="logo" />
-      <div class="promo">USE CODE<br><b>ProjectGamba</b><br><span>20% EXPERIENCE BOOST</span></div>
-    </div>
-  </div>
+    <script src="script.js"></script>
 </body>
 </html>
