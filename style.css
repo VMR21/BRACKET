@@ -133,7 +133,8 @@ body {
 
 /* Precise vertical positioning for matches to align with SVG paths */
 /* The top-left corner of each match box needs to be considered for SVG alignment */
-.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105, height=100 -> top=55, center=105 */
+/* These values might need micro-adjustments based on exact font/border rendering */
+.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105, height=100 -> center at 105 */
 .round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; } /* Y=295 */
 .round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; } /* Y=395 */
 .round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; } /* Y=585 */
