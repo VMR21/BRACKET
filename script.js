@@ -8,20 +8,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if player name and multiplier are both entered
     const arePlayerInputsComplete = (matchElement) => {
-        const playerInputsInMatch = matchElement.querySelectorAll('.player-input:not([readonly])');
-        const multiplierInputsInMatch = matchElement.querySelectorAll('.multiplier-input:not([readonly])');
+        // Find player and multiplier inputs that are NOT readonly within this specific match
+        const player1NameInput = matchElement.querySelector('.player-entry [data-player-id="1"]:not([readonly])');
+        const player1MultiplierInput = matchElement.querySelector('.player-entry [data-player-id="1"].multiplier-input:not([readonly])');
+        const player2NameInput = matchElement.querySelector('.player-entry [data-player-id="2"]:not([readonly])');
+        const player2MultiplierInput = matchElement.querySelector('.player-entry [data-player-id="2"].multiplier-input:not([readonly])');
 
-        if (playerInputsInMatch.length === 0) return false; // No editable players in this match (e.g., winner box)
+        // If there are no editable players in this match (e.g., it's a winner display box), return false
+        if (!player1NameInput) return false;
 
-        let allComplete = true;
-        for (let i = 0; i < playerInputsInMatch.length; i++) {
-            if (playerInputsInMatch[i].value.trim() === '' || 
-                (multiplierInputsInMatch[i] && multiplierInputsInMatch[i].value.trim() === '')) {
-                allComplete = false;
-                break;
-            }
+        // Check if both player 1 inputs are filled
+        const isPlayer1Complete = player1NameInput.value.trim() !== '' &&
+                                 (player1MultiplierInput ? player1MultiplierInput.value.trim() !== '' : true);
+
+        // Check if both player 2 inputs are filled (only if player 2 input exists)
+        let isPlayer2Complete = true;
+        if (player2NameInput) { // Check if there's a second player in the match (e.g., not the final winner box)
+            isPlayer2Complete = player2NameInput.value.trim() !== '' &&
+                                (player2MultiplierInput ? player2MultiplierInput.value.trim() !== '' : true);
         }
-        return allComplete;
+        
+        return isPlayer1Complete && isPlayer2Complete;
     };
 
     // Toggle visibility/activity of the "Decide Winner" button
@@ -65,8 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const player2Name = player2NameInput ? player2NameInput.value.trim() : '';
             const player2Multiplier = player2MultiplierInput ? parseFloat(player2MultiplierInput.value) : NaN;
 
+            // Basic validation
             if (!player1Name || isNaN(player1Multiplier) || !player2Name || isNaN(player2Multiplier)) {
-                alert('Please enter names and valid multipliers for both players.');
+                alert('Please ensure names are entered and valid multipliers are provided for both players.');
                 return;
             }
 
@@ -84,18 +92,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 winnerPlayerId = '2';
             } else {
                 // Tie-breaker: If multipliers are equal, Player 1 wins by default.
-                // You could add more complex logic here (e.g., random, user choice).
-                alert('Multipliers are equal! Player 1 wins by default.');
+                alert(`It's a tie between ${player1Name} (x${player1Multiplier}) and ${player2Name} (x${player2Multiplier})! ${player1Name} wins by default.`);
                 winnerName = player1Name;
                 winnerMultiplier = player1Multiplier;
                 winnerPlayerId = '1';
             }
 
-            // Remove previous winner highlights and apply to current winner
-            currentMatch.querySelectorAll('.player-input, .multiplier-input').forEach(input => {
-                input.classList.remove('winner');
-            });
+            // Remove previous winner highlights from both players in the current match
+            player1NameInput.classList.remove('winner');
+            player1MultiplierInput.classList.remove('winner');
+            player2NameInput.classList.remove('winner');
+            player2MultiplierInput.classList.remove('winner');
 
+            // Apply winner highlight to the actual winner
             if (winnerPlayerId === '1') {
                 player1NameInput.classList.add('winner');
                 player1MultiplierInput.classList.add('winner');
@@ -112,20 +121,23 @@ document.addEventListener('DOMContentLoaded', () => {
             // Disable inputs in the completed match
             currentMatch.querySelectorAll('.player-input, .multiplier-input').forEach(input => {
                 input.readOnly = true;
-                input.style.pointerEvents = 'none';
+                input.style.pointerEvents = 'none'; // Prevent interaction
             });
 
             // Progress winner to the next round
             const nextMatchId = currentMatch.dataset.nextMatch;
             const nextSlot = currentMatch.dataset.nextSlot;
-            const targetLineId = `line-${matchId}-${nextMatchId}-${nextSlot}`; // Construct line ID
+            
+            // Construct the line ID based on the progression map
+            // Example: "line-R1A-R2A-1"
+            let targetLineId = `line-${matchId}-${nextMatchId}-${nextSlot}`;
 
             if (nextMatchId === 'Winner') {
-                const finalWinnerInput = document.querySelector('.final-winner-input');
+                const finalWinnerInput = document.querySelector('#match-Winner .final-winner-input');
                 if (finalWinnerInput) {
                     finalWinnerInput.value = winnerName;
                     finalWinnerInput.classList.add('winner');
-                    finalWinnerInput.style.pointerEvents = 'none';
+                    finalWinnerInput.style.pointerEvents = 'none'; // Lock final winner
                     // Activate final line
                     const finalLine = document.getElementById(targetLineId);
                     if (finalLine) finalLine.classList.add('active');
@@ -139,12 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (targetPlayerInput) {
                         targetPlayerInput.value = winnerName;
                         targetPlayerInput.readOnly = false; // Make it editable for the next round
-                        targetPlayerInput.style.pointerEvents = 'auto';
+                        targetPlayerInput.style.pointerEvents = 'auto'; // Re-enable interaction
                     }
                     if (targetMultiplierInput) {
                         targetMultiplierInput.value = winnerMultiplier;
                         targetMultiplierInput.readOnly = false; // Make it editable for the next round
-                        targetMultiplierInput.style.pointerEvents = 'auto';
+                        targetMultiplierInput.style.pointerEvents = 'auto'; // Re-enable interaction
                     }
 
                     // Activate relevant line segment
@@ -165,26 +177,30 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleDecideWinnerButton(match);
     });
 
-    // Initial load animations (optional)
-    const initialAnimate = () => {
+    // Initial load animations for matches
+    const initialAnimateMatches = () => {
         const matches = document.querySelectorAll('.match');
         matches.forEach((match, index) => {
-            match.style.animationDelay = `${index * 0.1}s`;
+            match.style.animationDelay = `${index * 0.08}s`; // Slightly faster delay
             match.style.opacity = 0;
             match.style.transform = 'translateY(20px)';
-            match.style.animation = 'matchFadeIn 0.8s forwards ease-out';
+            match.style.animation = 'matchFadeIn 0.7s forwards ease-out'; // Slightly faster animation
         });
     };
 
-    // Append CSS keyframes for dynamic animations
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = `
-        @keyframes matchFadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-    `;
-    document.head.appendChild(styleSheet);
+    // Append CSS keyframes for dynamic animations if not already present
+    // This is generally better placed directly in style.css but included here for completeness
+    if (!document.querySelector('style[data-keyframe-matchfadein]')) {
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.setAttribute('data-keyframe-matchfadein', 'true');
+        styleSheet.innerText = `
+            @keyframes matchFadeIn {
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    }
 
-    initialAnimate();
+    initialAnimateMatches();
 });
