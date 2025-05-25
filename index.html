@@ -2,26 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Gamba 8-Player Bracket</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Gamba Bracket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1 class="title">Project Gamba Tournament</h1>
-  <div class="bracket">
-    <div class="round round-1">
-      <div class="match"><input placeholder="Player 1" /><input placeholder="Mult 1" /><input placeholder="Player 2" /><input placeholder="Mult 2" /><input placeholder="Winner" disabled /></div>
-      <div class="match"><input placeholder="Player 3" /><input placeholder="Mult 3" /><input placeholder="Player 4" /><input placeholder="Mult 4" /><input placeholder="Winner" disabled /></div>
-      <div class="match"><input placeholder="Player 5" /><input placeholder="Mult 5" /><input placeholder="Player 6" /><input placeholder="Mult 6" /><input placeholder="Winner" disabled /></div>
-      <div class="match"><input placeholder="Player 7" /><input placeholder="Mult 7" /><input placeholder="Player 8" /><input placeholder="Mult 8" /><input placeholder="Winner" disabled /></div>
-    </div>
-    <div class="round round-2">
-      <div class="match"><input placeholder="Winner R1" disabled /><input placeholder="Winner R2" disabled /><input placeholder="Winner" disabled /></div>
-      <div class="match"><input placeholder="Winner R3" disabled /><input placeholder="Winner R4" disabled /><input placeholder="Winner" disabled /></div>
-    </div>
-    <div class="round round-3">
-      <div class="match"><input placeholder="Finalist 1" disabled /><input placeholder="Finalist 2" disabled /><input placeholder="CHAMPION" disabled /></div>
+  <div class="container">
+    <h1 class="title">Project Gamba Tournament</h1>
+    <div class="bracket-wrapper">
+      <div class="bracket">
+        <div class="round round-1">
+          <div class="match"><input placeholder="Player 1" /><input placeholder="Mult 1" /><input placeholder="Player 2" /><input placeholder="Mult 2" /><div class="winner" data-next="0"></div></div>
+          <div class="match"><input placeholder="Player 3" /><input placeholder="Mult 3" /><input placeholder="Player 4" /><input placeholder="Mult 4" /><div class="winner" data-next="0"></div></div>
+          <div class="match"><input placeholder="Player 5" /><input placeholder="Mult 5" /><input placeholder="Player 6" /><input placeholder="Mult 6" /><div class="winner" data-next="1"></div></div>
+          <div class="match"><input placeholder="Player 7" /><input placeholder="Mult 7" /><input placeholder="Player 8" /><input placeholder="Mult 8" /><div class="winner" data-next="1"></div></div>
+        </div>
+
+        <div class="round round-2">
+          <div class="match"><div class="slot" id="r2m1p1"></div><div class="slot" id="r2m1p2"></div><div class="winner" data-next="0"></div></div>
+          <div class="match"><div class="slot" id="r2m2p1"></div><div class="slot" id="r2m2p2"></div><div class="winner" data-next="1"></div></div>
+        </div>
+
+        <div class="round round-3">
+          <div class="match"><div class="slot" id="final1"></div><div class="slot" id="final2"></div><div class="winner">CHAMPION</div></div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <img src="https://i.ibb.co/yf3gzzp/promo.png" class="promo" />
+        <img src="https://i.ibb.co/Cw1PYSL/gamba-logo.png" class="logo" />
+        <img src="https://i.ibb.co/h1FWzGZ/rainbet.png" class="rainbet" />
+      </div>
     </div>
   </div>
   <script src="script.js"></script>
