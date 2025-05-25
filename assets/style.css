@@ -1,32 +1,42 @@
 body {
   margin: 0;
-  background: #0a0a0a url('https://i.ibb.co/7yz5H7B/bg-grid.png') repeat center;
+  background: radial-gradient(circle at center, #0f0018, #000);
   font-family: 'Orbitron', sans-serif;
-  color: #0ff;
+  color: white;
   overflow-x: hidden;
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 2rem;
+  position: relative;
 }
 
 .title {
+  font-size: 2.8rem;
   text-align: center;
-  font-size: 3rem;
+  color: white;
   text-shadow: 0 0 10px #0ff;
 }
 
-.bracket-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  align-items: flex-start;
-  padding-top: 2rem;
+.title span {
+  color: #5af;
+  text-shadow: 0 0 15px #5af;
+}
+
+.title small {
+  font-size: 1.2rem;
+  color: #8cf;
+  text-shadow: 0 0 8px #8cf;
 }
 
 .bracket {
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
+  margin-top: 3rem;
+  position: relative;
 }
 
 .round {
@@ -36,44 +46,57 @@ body {
 }
 
 .match {
-  background: rgba(0, 255, 255, 0.05);
-  border: 2px solid #0ff;
-  padding: 1rem;
+  width: 100px;
+  height: 40px;
+  background: linear-gradient(90deg, #0ff, #f0f, #5af);
   border-radius: 10px;
-  min-width: 200px;
-  box-shadow: 0 0 10px #0ff88f;
+  box-shadow: 0 0 15px #0ff;
+  text-align: center;
+  line-height: 40px;
+  color: #000;
+  font-weight: bold;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
   transition: 0.3s;
 }
 
-input {
-  width: 100%;
-  margin-bottom: 0.4rem;
-  padding: 0.3rem;
-  background: #000;
-  border: 1px solid #0ff;
-  border-radius: 4px;
-  color: #0ff;
-  text-align: center;
-}
-
-.slot, .winner {
-  background: #000;
-  border: 1px dashed #0ff;
-  padding: 0.5rem;
-  margin-top: 0.4rem;
-  text-align: center;
-  border-radius: 4px;
+.match:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #fff;
 }
 
 .sidebar {
+  position: absolute;
+  right: 2rem;
+  top: 10rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
 }
 
-.sidebar img {
-  width: 200px;
-  max-width: 100%;
-  border-radius: 10px;
+.logo {
+  width: 120px;
+  filter: drop-shadow(0 0 10px #0ff);
+}
+
+.promo {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #0ff;
+  padding: 1rem;
+  text-align: center;
+  color: #0ff;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 0 10px #0ff;
+}
+
+.promo b {
+  font-size: 18px;
+  color: #fff;
+}
+
+.promo span {
+  font-size: 12px;
+  color: #8ff;
 }
