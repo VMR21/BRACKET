@@ -59,7 +59,7 @@ body {
     padding: 40px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     display: flex;
-    gap: 40px;
+    gap: 40px; /* Added gap back for sidebar */
     position: relative;
     max-width: 1600px;
     width: 100%;
@@ -85,7 +85,7 @@ body {
     left: 40px;
     letter-spacing: 2px;
     animation: textGlow 3s infinite alternate;
-    z-index: 20;
+    z-index: 20; /* Ensure title is above everything */
 }
 
 .tournament-text {
@@ -107,32 +107,50 @@ body {
     position: relative;
     padding-top: 80px; /* Space for title */
     height: 600px; /* Fixed height to match SVG viewBox height */
-    width: 1000px; /* Explicitly set width to match SVG viewBox for absolute positioning */
-    margin: 0 auto; /* Center the bracket area within its flex container */
 }
 
 .bracket-grid {
-    position: relative; /* Parent for absolute rounds */
-    width: 100%; /* This will be 1000px from bracket-main-area */
-    height: 100%; /* This will be 600px from bracket-main-area */
+    display: grid;
+    /* Using fractional units and max-width for better responsiveness */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 5%; /* Vertical gap, Horizontal gap (between columns) */
+    width: 100%; /* Take full width of bracket-main-area */
+    max-width: 900px; /* Limit overall bracket width for better appearance */
+    height: 100%;
+    position: relative;
     z-index: 10;
+    justify-content: center;
+    align-items: center;
 }
 
 .round {
     display: flex;
     flex-direction: column;
-    gap: 0; /* No gap between matches in a round if absolute positioning */
-    height: 100%; /* Must fill the vertical space of bracket-grid (600px) */
-    position: absolute; /* Position rounds absolutely within bracket-grid */
-    top: 0;
-    width: 200px; /* Match width of boxes */
+    justify-content: space-around; /* Distribute matches evenly */
+    gap: 30px; /* Space between matches in a round */
+    height: 100%; /* Make rounds fill vertical space */
+    position: relative;
 }
 
-/* Position each round column */
-.round-1 { left: 0px; } /* Aligns R1 boxes left edge with X=0 in SVG */
-.round-2 { left: 300px; } /* Aligns R2 boxes left edge with X=300 in SVG */
-.round-3 { left: 600px; } /* Aligns R3 boxes left edge with X=600 in SVG */
-.winner-round { left: 850px; } /* Aligns Winner box left edge with X=850 in SVG */
+/* IMPORTANT: Removed specific margin-top/bottom for each match.
+   The `justify-content: space-around` on `.round` and the `height: 100%`
+   on `.round` will handle vertical distribution automatically.
+   The SVG lines will likely need manual adjustment in `index.html`
+   if exact alignment is crucial, as their paths are hardcoded. */
+/*
+.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; }
+.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; }
+.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; }
+.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; }
+
+.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; }
+.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; }
+
+.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; }
+
+.winner-round .match { align-self: center; margin-top: 0; margin-bottom: 0; }
+*/
+
 
 .match {
     background: var(--input-bg);
@@ -142,14 +160,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 5px; /* Reduced gap inside match */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     width: 200px; /* Fixed width for all boxes */
     height: 100px; /* Fixed height for all boxes */
-    justify-content: center;
-    position: absolute; /* Set position to absolute within .round */
-    left: 0; /* Align to the left of its parent .round (which is already positioned) */
+    justify-content: center; /* Center content vertically */
+    position: relative; /* For winner button positioning */
 }
 
 .match:hover {
@@ -157,21 +174,6 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     border-color: var(--glow-color);
 }
-
-/* Precise vertical positioning for matches using 'top' */
-/* (Y-coordinate from SVG paths - half match height of 50px) */
-.round-1 .match:nth-child(1) { top: 55px; } /* SVG Y=105 */
-.round-1 .match:nth-child(2) { top: 245px; } /* SVG Y=295 */
-.round-1 .match:nth-child(3) { top: 345px; } /* SVG Y=395 */
-.round-1 .match:nth-child(4) { top: 535px; } /* SVG Y=585 */
-
-.round-2 .match:nth-child(1) { top: 155px; } /* SVG Y=205 */
-.round-2 .match:nth-child(2) { top: 445px; } /* SVG Y=495 */
-
-.round-3 .match:nth-child(1) { top: 345px; } /* SVG Y=395 */
-
-.winner-round .match { top: 345px; } /* SVG Y=395 */
-
 
 .player-entry {
     display: flex;
@@ -183,20 +185,20 @@ body {
 
 .player-input {
     flex-grow: 1;
-    padding: 5px 8px;
+    padding: 5px 8px; /* Adjusted padding */
     background: transparent;
     border: 1px solid var(--input-border);
     border-radius: 6px;
     color: var(--text-color);
-    font-size: 0.9em;
+    font-size: 0.9em; /* Slightly smaller font */
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     text-align: center;
-    min-width: 0;
+    min-width: 0; /* Allow shrinking */
 }
 
 .multiplier-input {
-    width: 40px;
+    width: 40px; /* Fixed width for multiplier */
     padding: 5px 3px;
     background: transparent;
     border: 1px solid var(--input-border);
@@ -205,14 +207,14 @@ body {
     font-size: 0.9em;
     outline: none;
     text-align: center;
-    -moz-appearance: textfield;
+    -moz-appearance: textfield; /* Hide arrows in Firefox */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .multiplier-input::-webkit-outer-spin-button,
 .multiplier-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0;
+    margin: 0; /* Hide arrows in Chrome, Safari, Edge */
 }
 
 
@@ -227,7 +229,7 @@ body {
 
 /* Winner input specific style */
 .player-input.winner {
-    background: rgba(255, 255, 0, 0.1);
+    background: rgba(255, 255, 0, 0.1); /* Slightly yellow tint for winner */
     color: var(--highlight-color);
     border-color: var(--highlight-color);
     text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
@@ -249,14 +251,14 @@ body {
 }
 
 .final-winner-entry {
-    flex-direction: column;
+    flex-direction: column; /* Ensure winner name is centered */
     gap: 0;
 }
 
 .vs-text {
     font-size: 0.8em;
     color: rgba(255, 255, 255, 0.5);
-    display: block;
+    display: block; /* Always visible, just for styling */
     margin: 2px 0;
 }
 
@@ -274,12 +276,12 @@ body {
     font-weight: 700;
     letter-spacing: 0.5px;
     position: absolute;
-    bottom: -20px;
+    bottom: -20px; /* Position below the box */
     left: 50%;
     transform: translateX(-50%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 15;
+    opacity: 0; /* Hidden by default */
+    pointer-events: none; /* Disable interaction when hidden */
+    z-index: 15; /* Ensure button is clickable */
 }
 
 .decide-winner-btn.active {
@@ -300,7 +302,7 @@ body {
 }
 
 .decide-winner-btn.match-completed {
-    background: #444;
+    background: #444; /* Greyed out when completed */
     cursor: not-allowed;
     pointer-events: none;
     opacity: 0.6;
@@ -319,7 +321,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 1; /* Below matches */
 }
 
 .bracket-line {
@@ -417,14 +419,42 @@ body {
     margin-bottom: 10px;
 }
 
-.wager-race {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2em;
+.boost-text {
+    font-size: 1.8em;
     font-weight: 700;
-    color: var(--highlight-color);
-    text-shadow: 0 0 10px var(--highlight-color), 0 0 20px rgba(255, 255, 0, 0.5);
-    margin-top: 15px;
+    color: #fff;
     line-height: 1.2;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* New Sidebar Content */
+.sidebar .logo-section img {
+    /* Replace with your image URL */
+    content:url('https://files.kick.com/images/user/99806/profile_image/conversion/1ab9ad81-7b12-4589-934c-bee6b3f0a9a9-fullsize.webp');
+    width: 150px; /* Adjust as needed */
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.sidebar .code-section {
+    background: linear-gradient(45deg, #ff6b6b, #c737ff); /* Example gradient */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar .code-section p {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.sidebar .code-section .wager-race {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 /* Responsive adjustments */
@@ -435,34 +465,35 @@ body {
         gap: 30px;
     }
     .bracket-main-area {
-        height: auto;
-        width: 100%; /* Allow width to be flexible for smaller screens */
-        max-width: 900px; /* Constrain max width */
+        height: auto; /* Allow height to adjust */
     }
     .bracket-grid {
-        position: static; /* Remove absolute positioning on small screens */
-        display: flex; /* Change to flex for stacking */
-        flex-direction: column;
-        gap: 40px;
+        grid-template-columns: 1fr;
+        gap: 40px 0;
         height: auto;
-        width: 100%;
+        justify-content: center;
+        align-items: flex-start; /* Align matches to the top */
     }
     .round {
-        position: static; /* Remove absolute positioning */
-        width: 100%; /* Take full width */
-        height: auto;
-        align-items: center; /* Center matches in column */
+        align-items: center;
         gap: 20px;
+        height: auto; /* Allow height to adjust */
+    }
+    /* Reset specific match positioning for mobile */
+    .round-1 .match, .round-2 .match, .round-3 .match, .winner-round .match {
+        align-self: auto;
+        margin-top: 0;
+        margin-bottom: 0;
     }
     .match {
-        position: static; /* Remove absolute positioning */
-        max-width: 280px; /* Constrain individual match width */
-        height: auto;
+        max-width: 280px;
+        height: auto; /* Auto height for content */
         min-height: 100px;
-        flex-direction: column;
+        flex-direction: column; /* Stack inputs vertically */
+        justify-content: center;
     }
     .player-entry {
-        flex-direction: row;
+        flex-direction: row; /* Keep player name and multiplier side-by-side */
         gap: 5px;
     }
     .player-input {
@@ -470,7 +501,7 @@ body {
         flex-basis: auto;
     }
     .multiplier-input {
-        flex-shrink: 0;
+        flex-shrink: 0; /* Don't shrink multiplier input */
     }
     .decide-winner-btn {
         position: static;
@@ -501,5 +532,5 @@ body {
     .match { padding: 8px; height: auto; min-height: 90px; }
     .decide-winner-btn { padding: 6px 12px; font-size: 0.8em; }
     .promo-code { font-size: 1.8em; }
-    .wager-race { font-size: 1.5em; }
+    .boost-text { font-size: 1.5em; }
 }
