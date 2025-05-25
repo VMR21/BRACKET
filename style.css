@@ -9,9 +9,6 @@
     --input-border: rgba(255, 255, 255, 0.2);
     --input-focus-border: var(--secondary-color);
     --glow-color: var(--secondary-color);
-    --highlight-color: #ffee00; /* Yellow for winner */
-    --line-color: rgba(0, 224, 255, 0.5); /* Semi-transparent cyan */
-    --line-glow: #00e0ff; /* Bright cyan for line glow */
 }
 
 * {
@@ -24,13 +21,12 @@
 body {
     background: linear-gradient(135deg, #0d0a20, #2a0b3b);
     color: var(--text-color);
-    overflow: hidden;
+    overflow: hidden; /* Hide overflow for background animation */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    position: relative;
 }
 
 /* Background Animation */
@@ -48,20 +44,29 @@ body {
 }
 
 @keyframes backgroundPulse {
-    0% { transform: scale(1); opacity: 0.7; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 0.7; }
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
 }
 
 .container {
-    background: rgba(13, 10, 32, 0.7);
+    background: rgba(13, 10, 32, 0.7); /* Slightly darker, semi-transparent */
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     display: flex;
     gap: 40px;
     position: relative;
-    max-width: 1600px;
+    max-width: 1400px;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateY(20px);
@@ -70,7 +75,10 @@ body {
 }
 
 @keyframes fadeInUp {
-    to { transform: translateY(0); opacity: 1; }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .title {
@@ -81,11 +89,10 @@ body {
     text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(122, 59, 255, 0.5);
     margin-bottom: 30px;
     position: absolute;
-    top: -60px;
+    top: -60px; /* Adjust as needed */
     left: 40px;
     letter-spacing: 2px;
     animation: textGlow 3s infinite alternate;
-    z-index: 20; /* Ensure title is above everything */
 }
 
 .tournament-text {
@@ -98,53 +105,45 @@ body {
 }
 
 @keyframes textGlow {
-    0% { text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(122, 59, 255, 0.5); }
-    100% { text-shadow: 0 0 25px var(--primary-color), 0 0 40px rgba(122, 59, 255, 0.8); }
-}
-
-.bracket-main-area {
-    flex-grow: 1;
-    position: relative;
-    padding-top: 80px; /* Space for title */
-    height: 600px; /* Fixed height to match SVG viewBox height */
+    0% {
+        text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(122, 59, 255, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 25px var(--primary-color), 0 0 40px rgba(122, 59, 255, 0.8);
+    }
 }
 
 .bracket-grid {
     display: grid;
-    grid-template-columns: 200px 200px 200px 200px; /* Fixed column widths for better SVG alignment */
-    gap: 20px 80px; /* Vertical gap, Horizontal gap (between columns) */
-    width: 100%;
-    height: 100%; /* Occupy height of bracket-main-area */
+    grid-template-columns: repeat(3, 1fr); /* R1, R2, Final */
+    gap: 20px 80px; /* Vertical gap, Horizontal gap */
+    flex-grow: 1; /* Allows it to take available space */
     position: relative;
-    z-index: 10; /* Above SVG lines */
-    /* Center the grid within its area */
-    justify-content: center;
-    align-items: center;
+    padding-top: 80px; /* Space for title */
 }
 
 .round {
     display: flex;
     flex-direction: column;
-    justify-content: space-around; /* Distribute matches evenly */
-    gap: 30px; /* Space between matches in a round */
-    height: 100%; /* Make rounds fill vertical space */
-    position: relative; /* For precise match positioning */
+    justify-content: space-around;
+    gap: 20px;
+    position: relative;
+    padding-right: 40px; /* Space for lines */
 }
 
-/* Precise vertical positioning for matches to align with SVG paths */
-/* The top-left corner of each match box needs to be considered for SVG alignment */
-.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105, height=100 -> top=55, center=105 */
-.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; } /* Y=295 */
-.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; } /* Y=395 */
-.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; } /* Y=585 */
+.round-1 {
+    grid-column: 1 / 2;
+}
 
-.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; } /* Y=205 */
-.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; } /* Y=495 */
+.round-2 {
+    grid-column: 2 / 3;
+    justify-content: center; /* Center the two matches */
+}
 
-.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; } /* Y=395 */
-
-.winner-round .match { align-self: center; margin-top: 0; margin-bottom: 0; }
-
+.final-round {
+    grid-column: 3 / 4;
+    justify-content: center; /* Center the final match */
+}
 
 .match {
     background: var(--input-bg);
@@ -153,14 +152,11 @@ body {
     padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 5px; /* Reduced gap inside match */
+    gap: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    width: 200px; /* Fixed width for all boxes */
-    height: 100px; /* Fixed height for all boxes */
-    justify-content: center; /* Center content vertically */
-    position: relative; /* For winner button positioning */
+    position: relative;
+    z-index: 10; /* Ensure matches are above lines */
 }
 
 .match:hover {
@@ -169,180 +165,107 @@ body {
     border-color: var(--glow-color);
 }
 
-.player-entry {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    width: 100%;
-    justify-content: center;
-}
-
 .player-input {
-    flex-grow: 1;
-    padding: 5px 8px; /* Adjusted padding */
+    width: 100%;
+    padding: 12px 15px;
     background: transparent;
     border: 1px solid var(--input-border);
     border-radius: 6px;
     color: var(--text-color);
-    font-size: 0.9em; /* Slightly smaller font */
+    font-size: 1.1em;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    text-align: center;
-    min-width: 0; /* Allow shrinking */
-}
-
-.multiplier-input {
-    width: 40px; /* Fixed width for multiplier */
-    padding: 5px 3px;
-    background: transparent;
-    border: 1px solid var(--input-border);
-    border-radius: 6px;
-    color: var(--text-color);
-    font-size: 0.9em;
-    outline: none;
-    text-align: center;
-    -moz-appearance: textfield; /* Hide arrows in Firefox */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    position: relative;
+    z-index: 1; /* For glowing effect */
 }
 
-.multiplier-input::-webkit-outer-spin-button,
-.multiplier-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0; /* Hide arrows in Chrome, Safari, Edge */
-}
-
-
-.player-input::placeholder, .multiplier-input::placeholder {
+.player-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
 
-.player-input:focus, .multiplier-input:focus {
+.player-input:focus {
     border-color: var(--input-focus-border);
     box-shadow: 0 0 10px var(--glow-color);
 }
 
-/* Winner input specific style */
-.player-input.winner {
-    background: rgba(255, 255, 0, 0.1); /* Slightly yellow tint for winner */
-    color: var(--highlight-color);
-    border-color: var(--highlight-color);
-    text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
-}
-.multiplier-input.winner {
-    background: rgba(255, 255, 0, 0.1);
-    color: var(--highlight-color);
-    border-color: var(--highlight-color);
-}
-
-/* Final Winner Input */
-.final-winner-input {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: var(--highlight-color);
-    text-shadow: 0 0 10px var(--highlight-color), 0 0 20px rgba(255, 255, 0, 0.5);
-    border-color: var(--highlight-color) !important;
-    background: rgba(255, 255, 0, 0.15) !important;
-}
-
-.final-winner-entry {
-    flex-direction: column; /* Ensure winner name is centered */
-    gap: 0;
-}
-
-.vs-text {
-    font-size: 0.8em;
-    color: rgba(255, 255, 255, 0.5);
-    display: block; /* Always visible, just for styling */
-    margin: 2px 0;
-}
-
-.decide-winner-btn {
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    border: none;
-    border-radius: 5px;
-    color: white;
-    padding: 8px 15px;
-    font-size: 0.85em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+/* Dynamic line drawing (simplified, for a "million dollar" look, you'd use SVG or canvas) */
+/* These are just visual representations, not connected to JS logic */
+.bracket-grid::before,
+.bracket-grid::after {
+    content: '';
     position: absolute;
-    bottom: -20px; /* Position below the box */
-    left: 50%;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 0 10px var(--glow-color);
+    z-index: 5;
+    opacity: 0.8;
+}
+
+/* Lines for Round 1 to Round 2 */
+.bracket-grid::before {
+    width: 4px; /* Thickness of lines */
+    height: calc(100% - 180px); /* Adjust height to match bracket structure */
+    top: 130px; /* Position from top */
+    left: calc(33.33% + 20px); /* Between R1 and R2 */
     transform: translateX(-50%);
-    opacity: 0; /* Hidden by default */
-    pointer-events: none; /* Disable interaction when hidden */
-    z-index: 15; /* Ensure button is clickable */
 }
 
-.decide-winner-btn.active {
-    opacity: 1;
-    pointer-events: all;
-    animation: bounceIn 0.5s ease-out;
+/* Lines for Round 2 to Final */
+.bracket-grid::after {
+    width: 4px; /* Thickness of lines */
+    height: calc(50% - 50px); /* Adjust height */
+    top: calc(50% + 50px); /* Position */
+    left: calc(66.66% + 20px); /* Between R2 and Final */
+    transform: translateX(-50%);
 }
 
-.decide-winner-btn:hover {
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
-    filter: brightness(1.1);
-}
-
-.decide-winner-btn:active {
-    transform: translateX(-50%) translateY(0px);
-    filter: brightness(0.9);
-}
-
-.decide-winner-btn.match-completed {
-    background: #444; /* Greyed out when completed */
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-@keyframes bounceIn {
-    0% { transform: translateX(-50%) scale(0.7); opacity: 0; }
-    50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
-    100% { transform: translateX(-50%) scale(1); opacity: 1; }
-}
-
-/* SVG Lines */
-.bracket-lines {
+/* More complex lines would involve pseudo-elements per match or SVG paths */
+.match:nth-child(odd)::before {
+    /* Line from top player to right */
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Below matches */
+    right: -40px; /* Extends beyond match box */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 0 8px var(--glow-color);
+    animation: lineDraw 1s forwards ease-out;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
 }
 
-.bracket-line {
-    fill: none;
-    stroke: var(--line-color);
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: stroke 0.5s ease, stroke-width 0.5s ease, filter 0.5s ease;
-    filter: drop-shadow(0 0 5px rgba(0, 224, 255, 0.2));
+.match:nth-child(even)::before {
+    /* Line from bottom player to right */
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 0 8px var(--glow-color);
+    animation: lineDraw 1s forwards ease-out;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
 }
 
-.bracket-line.active {
-    stroke: var(--line-glow);
-    stroke-width: 4;
-    filter: drop-shadow(0 0 8px var(--line-glow)) drop-shadow(0 0 15px var(--line-glow));
-    animation: linePulse 2s infinite alternate;
+@keyframes lineDraw {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 40px; /* Or whatever target width */
+        opacity: 1;
+    }
 }
 
-@keyframes linePulse {
-    0% { stroke: var(--line-glow); filter: drop-shadow(0 0 8px var(--line-glow)); }
-    100% { stroke: var(--line-glow); filter: drop-shadow(0 0 15px var(--line-glow)); }
-}
-
-/* Sidebar Styling - Same as before */
+/* Sidebar Styling */
 .sidebar {
-    width: 280px;
+    width: 280px; /* Fixed width for sidebar */
     flex-shrink: 0;
     background: rgba(13, 10, 32, 0.8);
     border-radius: 15px;
@@ -356,26 +279,40 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     transform: translateX(20px);
     opacity: 0;
-    animation: fadeInRight 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
+    animation: fadeInRight 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s; /* Delayed fade-in */
 }
 
 @keyframes fadeInRight {
-    to { transform: translateX(0); opacity: 1; }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
-.logo-section { text-align: center; }
+.logo-section {
+    text-align: center;
+}
 
 .gamba-logo {
-    width: 180px;
+    width: 180px; /* Adjust size as needed */
     height: auto;
     filter: drop-shadow(0 0 15px var(--glow-color));
     animation: logoPulse 4s infinite ease-in-out alternate;
 }
 
 @keyframes logoPulse {
-    0% { transform: scale(1); filter: drop-shadow(0 0 15px var(--glow-color)); }
-    50% { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--glow-color)); }
-    100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--glow-color)); }
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px var(--glow-color));
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 25px var(--glow-color));
+    }
+    100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 15px var(--glow-color));
+    }
 }
 
 .code-section {
@@ -387,11 +324,14 @@ body {
     width: 100%;
     transform: scale(0.9);
     opacity: 0;
-    animation: popIn 0.6s forwards cubic-bezier(0.68, -0.55, 0.265, 1.55) 1s;
+    animation: popIn 0.6s forwards cubic-bezier(0.68, -0.55, 0.265, 1.55) 1s; /* Bouncy animation */
 }
 
 @keyframes popIn {
-    to { transform: scale(1); opacity: 1; }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .use-code-text {
@@ -420,55 +360,22 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 1400px) {
+@media (max-width: 1200px) {
     .container {
         flex-direction: column;
         padding: 30px;
-        gap: 30px;
-    }
-    .bracket-main-area {
-        height: auto; /* Allow height to adjust */
     }
     .bracket-grid {
         grid-template-columns: 1fr;
         gap: 40px 0;
-        height: auto;
-        justify-content: center;
-        align-items: flex-start; /* Align matches to the top */
+        padding-top: 60px;
     }
     .round {
+        padding-right: 0;
         align-items: center;
-        gap: 20px;
-        height: auto; /* Allow height to adjust */
     }
-    /* Reset specific match positioning for mobile */
-    .round-1 .match, .round-2 .match, .round-3 .match, .winner-round .match {
-        align-self: auto;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    .match {
-        max-width: 280px;
-        height: auto; /* Auto height for content */
-        min-height: 100px;
-        flex-direction: column; /* Stack inputs vertically */
-        justify-content: center;
-    }
-    .player-entry {
-        flex-direction: row; /* Keep player name and multiplier side-by-side */
-        gap: 5px;
-    }
-    .player-input {
-        flex-grow: 1;
-        flex-basis: auto;
-    }
-    .multiplier-input {
-        flex-shrink: 0; /* Don't shrink multiplier input */
-    }
-    .decide-winner-btn {
-        position: static;
-        transform: none;
-        margin-top: 10px;
+    .round-1, .round-2, .final-round {
+        grid-column: auto;
     }
     .sidebar {
         width: 100%;
@@ -476,23 +383,31 @@ body {
         margin-top: 40px;
     }
     .title {
-        position: static;
+        position: static; /* Remove absolute positioning */
         text-align: center;
         margin-bottom: 20px;
         font-size: 3em;
     }
-    .bracket-lines { /* Hide SVG lines on smaller screens as layout changes */
+    .bracket-grid::before,
+    .bracket-grid::after,
+    .match::before { /* Hide complex lines on smaller screens for simplicity */
         display: none;
     }
 }
 
 @media (max-width: 768px) {
-    .title { font-size: 2.2em; }
-    .tournament-text { font-size: 0.5em; }
-    .player-input, .multiplier-input { font-size: 0.9em; padding: 7px 5px; }
-    .container { padding: 15px; border-radius: 10px; }
-    .match { padding: 8px; height: auto; min-height: 90px; }
-    .decide-winner-btn { padding: 6px 12px; font-size: 0.8em; }
-    .promo-code { font-size: 1.8em; }
-    .boost-text { font-size: 1.5em; }
+    .title {
+        font-size: 2.5em;
+    }
+    .player-input {
+        font-size: 1em;
+        padding: 10px 12px;
+    }
+    .container {
+        padding: 20px;
+        border-radius: 15px;
+    }
+    .match {
+        padding: 8px;
+    }
 }
