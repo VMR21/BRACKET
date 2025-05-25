@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Gamba Tournament</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Gamba 8-Player Bracket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
-    <div class="text-center py-8">
-        <h1 class="text-4xl md:text-6xl font-bold tracking-wide neon">Project Gamba Tournament</h1>
+<body>
+  <h1 class="title">Project Gamba Tournament</h1>
+  <div class="bracket">
+    <div class="round round-1">
+      <div class="match"><input placeholder="Player 1" /><input placeholder="Mult 1" /><input placeholder="Player 2" /><input placeholder="Mult 2" /><input placeholder="Winner" disabled /></div>
+      <div class="match"><input placeholder="Player 3" /><input placeholder="Mult 3" /><input placeholder="Player 4" /><input placeholder="Mult 4" /><input placeholder="Winner" disabled /></div>
+      <div class="match"><input placeholder="Player 5" /><input placeholder="Mult 5" /><input placeholder="Player 6" /><input placeholder="Mult 6" /><input placeholder="Winner" disabled /></div>
+      <div class="match"><input placeholder="Player 7" /><input placeholder="Mult 7" /><input placeholder="Player 8" /><input placeholder="Mult 8" /><input placeholder="Winner" disabled /></div>
     </div>
-    <div id="bracket" class="grid grid-cols-5 gap-2 px-4 md:px-20 pb-20"></div>
-    <script src="assets/script.js"></script>
+    <div class="round round-2">
+      <div class="match"><input placeholder="Winner R1" disabled /><input placeholder="Winner R2" disabled /><input placeholder="Winner" disabled /></div>
+      <div class="match"><input placeholder="Winner R3" disabled /><input placeholder="Winner R4" disabled /><input placeholder="Winner" disabled /></div>
+    </div>
+    <div class="round round-3">
+      <div class="match"><input placeholder="Finalist 1" disabled /><input placeholder="Finalist 2" disabled /><input placeholder="CHAMPION" disabled /></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
