@@ -28,7 +28,7 @@
 
             <div class="bracket-grid">
                 <div class="round round-1">
-                    <div class="match" id="match-R1A" data-round="R1">
+                    <div class="match" id="match-R1A" data-round="R1" data-next-match="R2A" data-next-slot="1">
                         <div class="player-entry">
                             <input type="text" class="player-input" data-player-id="1" placeholder="Player 1">
                             <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
@@ -38,9 +38,9 @@
                             <input type="text" class="player-input" data-player-id="2" placeholder="Player 2">
                             <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R1A" data-target-path="line-R1A-R2A-1">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R1A">Decide Winner</button>
                     </div>
-                    <div class="match" id="match-R1B" data-round="R1">
+                    <div class="match" id="match-R1B" data-round="R1" data-next-match="R2A" data-next-slot="2">
                         <div class="player-entry">
                             <input type="text" class="player-input" data-player-id="1" placeholder="Player 3">
                             <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
@@ -50,9 +50,9 @@
                             <input type="text" class="player-input" data-player-id="2" placeholder="Player 4">
                             <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R1B" data-target-path="line-R1B-R2A-2">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R1B">Decide Winner</button>
                     </div>
-                    <div class="match" id="match-R1C" data-round="R1">
+                    <div class="match" id="match-R1C" data-round="R1" data-next-match="R2B" data-next-slot="1">
                         <div class="player-entry">
                             <input type="text" class="player-input" data-player-id="1" placeholder="Player 5">
                             <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
@@ -62,9 +62,9 @@
                             <input type="text" class="player-input" data-player-id="2" placeholder="Player 6">
                             <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R1C" data-target-path="line-R1C-R2B-1">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R1C">Decide Winner</button>
                     </div>
-                    <div class="match" id="match-R1D" data-round="R1">
+                    <div class="match" id="match-R1D" data-round="R1" data-next-match="R2B" data-next-slot="2">
                         <div class="player-entry">
                             <input type="text" class="player-input" data-player-id="1" placeholder="Player 7">
                             <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
@@ -74,12 +74,12 @@
                             <input type="text" class="player-input" data-player-id="2" placeholder="Player 8">
                             <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R1D" data-target-path="line-R1D-R2B-2">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R1D">Decide Winner</button>
                     </div>
                 </div>
 
                 <div class="round round-2">
-                    <div class="match" id="match-R2A" data-round="R2">
+                    <div class="match" id="match-R2A" data-round="R2" data-next-match="R3A" data-next-slot="1">
                         <div class="player-entry">
                             <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R1A/B" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
@@ -89,9 +89,9 @@
                             <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R1A/B" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R2A" data-target-path="line-R2A-R3A-1">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R2A">Decide Winner</button>
                     </div>
-                    <div class="match" id="match-R2B" data-round="R2">
+                    <div class="match" id="match-R2B" data-round="R2" data-next-match="R3A" data-next-slot="2">
                         <div class="player-entry">
                             <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R1C/D" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
@@ -101,12 +101,12 @@
                             <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R1C/D" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R2B" data-target-path="line-R2B-R3A-2">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R2B">Decide Winner</button>
                     </div>
                 </div>
 
                 <div class="round round-3">
-                    <div class="match" id="match-R3A" data-round="R3">
+                    <div class="match" id="match-R3A" data-round="R3" data-next-match="Winner" data-next-slot="1">
                         <div class="player-entry">
                             <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R2A/B" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
@@ -116,7 +116,7 @@
                             <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R2A/B" readonly>
                             <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
                         </div>
-                        <button class="decide-winner-btn" data-match-id="R3A" data-target-path="line-R3A-Winner">Decide Winner</button>
+                        <button class="decide-winner-btn" data-match-id="R3A">Decide Winner</button>
                     </div>
                 </div>
 
