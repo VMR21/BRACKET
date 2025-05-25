@@ -1,70 +1,203 @@
 document.addEventListener('DOMContentLoaded', () => {
     const playerInputs = document.querySelectorAll('.player-input');
+    const selectWinnerButtons = document.querySelectorAll('.select-winner');
+    const vsTexts = document.querySelectorAll('.vs-text');
+    const bracketLines = document.querySelectorAll('.bracket-line');
 
-    playerInputs.forEach(input => {
-        // Add a simple 'sparkle' effect when input is focused/blurred or content changes
-        input.addEventListener('focus', () => {
-            input.style.transition = 'none'; // Temporarily disable transition for immediate glow
-            input.style.boxShadow = '0 0 15px var(--glow-color), 0 0 25px var(--glow-color-stronger)';
-            input.classList.add('focused');
-        });
+    // Map match IDs to their corresponding input targets in the next round
+    const nextRoundTargets = {
+        'R1A': { player1: { targetMatch: 'R2A', targetPlayerId: 1 }, lineId: 'line-R1A-R2A-1' },
+        'R1B': { player2: { targetMatch: 'R2A', targetPlayerId: 2 }, lineId: 'line-R1A-R2A-2' },
+        'R1C': { player1: { targetMatch: 'R2B', targetPlayerId: 1 }, lineId: 'line-R1B-R2B-1' }, // Note: R1C and R1D feed into R2B
+        'R1D': { player2: { targetMatch: 'R2B', targetPlayerId: 2 }, lineId: 'line-R1B-R2B-2' },
 
-        input.addEventListener('blur', () => {
-            // Re-enable transition and remove immediate glow
-            input.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
-            if (input.value.trim() === '') {
-                input.style.boxShadow = ''; // Remove glow if empty
+        'R2A': { player1: { targetMatch: 'R3A', targetPlayerId: 1 }, lineId: 'line-R2A-R3A-1' },
+        'R2B': { player2: { targetMatch: 'R3A', targetPlayerId: 2 }, lineId: 'line-R2A-R3A-2' },
+
+        'R3A': { player1: { targetMatch: 'Winner', targetPlayerId: 1 }, lineId: 'line-R3A-Winner' }
+    };
+
+    // Helper to get match element from an input
+    const getMatchElement = (input) => input.closest('.match');
+
+    // Helper to check if both inputs in a match have content
+    const checkBothPlayersEntered = (matchElement) => {
+        const inputs = matchElement.querySelectorAll('.player-input:not([readonly])');
+        if (inputs.length < 2) return false; // Not a starting match
+        return Array.from(inputs).every(input => input.value.trim() !== '');
+    };
+
+    // Update 'vs-text' visibility
+    const updateVsText = (matchElement) => {
+        const vsSpan = matchElement.querySelector('.vs-text');
+        if (checkBothPlayersEntered(matchElement)) {
+            vsSpan.classList.add('active');
+        } else {
+            vsSpan.classList.remove('active');
+        }
+    };
+
+    // Show/hide winner selection button
+    const toggleWinnerButton = (matchElement) => {
+        const winnerBtn = matchElement.querySelector('.select-winner');
+        const inputs = matchElement.querySelectorAll('.player-input:not([readonly])');
+        if (winnerBtn) {
+            if (inputs.length === 2 && checkBothPlayersEntered(matchElement) && !winnerBtn.classList.contains('match-completed')) {
+                winnerBtn.classList.add('active');
             } else {
-                // Keep a subtle glow if there's content
-                input.style.boxShadow = '0 0 5px var(--glow-color), 0 0 10px rgba(0, 224, 255, 0.3)';
+                winnerBtn.classList.remove('active');
             }
-            input.classList.remove('focused');
-        });
+        }
+    };
 
-        // Add a subtle animation when text is typed
+    // Event listeners for player inputs
+    playerInputs.forEach(input => {
+        // Initial check for 'vs-text' and winner button
+        const matchElement = getMatchElement(input);
+        if (matchElement && matchElement.dataset.round === 'R1') { // Only for first round inputs
+            updateVsText(matchElement);
+            toggleWinnerButton(matchElement);
+        }
+
         input.addEventListener('input', () => {
-            if (input.value.length > 0 && !input.classList.contains('has-content')) {
-                input.classList.add('has-content');
-                input.style.animation = 'textPopIn 0.3s ease-out';
-            } else if (input.value.length === 0 && input.classList.contains('has-content')) {
-                input.classList.remove('has-content');
-                input.style.animation = 'none'; // Reset animation
+            const currentMatch = getMatchElement(input);
+            if (currentMatch) {
+                updateVsText(currentMatch);
+                toggleWinnerButton(currentMatch);
             }
         });
 
-        input.addEventListener('animationend', () => {
-            input.style.animation = ''; // Remove animation style after it ends
+        // Basic focus/blur animations for all inputs
+        input.addEventListener('focus', () => {
+            input.style.boxShadow = '0 0 10px var(--glow-color)';
+        });
+        input.addEventListener('blur', () => {
+            input.style.boxShadow = ''; // Remove glow unless winner
         });
     });
 
-    // Custom CSS variable for stronger glow for JS interactivity
-    document.documentElement.style.setProperty('--glow-color-stronger', 'rgba(0, 224, 255, 0.7)');
+    // Event listeners for select winner buttons
+    selectWinnerButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const matchId = button.dataset.matchId;
+            const winnerTarget = button.dataset.winnerTarget; // e.g., "R2A-P1" or "Winner"
+            const currentMatch = document.getElementById(matchId);
 
-    // Optional: Add a subtle overall background flicker/pulse for extra "coolness"
-    const backgroundAnim = document.querySelector('.background-animation');
-    setInterval(() => {
-        backgroundAnim.style.opacity = (Math.random() * 0.1) + 0.6; // Opacity between 0.6 and 0.7
-    }, 5000); // Change every 5 seconds
+            // Determine which player won from the current match's inputs
+            const playersInMatch = currentMatch.querySelectorAll('.player-input');
+            let winnerName = '';
+            let winnerInput = null;
 
-    // Add a simple animation for player input boxes on load
-    playerInputs.forEach((input, index) => {
-        input.style.setProperty('--delay', `${index * 0.05}s`); // Staggered delay
-        input.style.animation = 'inputFadeIn 0.5s forwards ease-out';
-        input.style.opacity = 0; // Start hidden
-        input.style.transform = 'translateY(10px)'; // Start slightly below
+            // Simple selection logic: for each player, ask which one is the winner
+            // In a real scenario, you'd click on the *player's name* to select them.
+            // For now, let's assume the first input is "Player A" and second is "Player B"
+            // and the button needs to know WHICH player it represents winning.
+            // A more robust UI would be:
+            // <button class="select-winner" data-player-id="1">Player 1 Wins</button>
+            // <button class="select-winner" data-player-id="2">Player 2 Wins</button>
+            // For simplicity with one button, we'll just pick player 1 for now, or you modify the buttons.
+            // Let's modify the buttons to select a specific player.
+
+            // Re-evaluating the click logic:
+            // The HTML currently has one button per match, data-winner-target indicates the next slot.
+            // We need to know which *player* within the match just won.
+            // Let's change the HTML buttons to be next to each player.
+            // For now, to make the current HTML work, I'll just pick the first player's name as winner for demo.
+            // A better way is below (commented out in HTML, but here for conceptual clarity):
+
+            // NEW APPROACH: Instead of one button per match, buttons are per player-entry.
+            const playerEntry = button.closest('.player-entry'); // Get the entry for the winning player
+            if (playerEntry) {
+                winnerInput = playerEntry.querySelector('.player-input');
+                winnerName = winnerInput.value.trim();
+            }
+
+            if (!winnerName) {
+                alert('Please enter a player name before selecting a winner.');
+                return;
+            }
+
+            // Highlight the winner in the current match
+            playersInMatch.forEach(input => input.classList.remove('winner'));
+            if (winnerInput) {
+                winnerInput.classList.add('winner');
+            }
+            
+            // Mark match as completed
+            button.classList.remove('active');
+            button.classList.add('match-completed');
+            currentMatch.classList.add('completed'); // Add a class to the match box itself
+
+            // Disable inputs in the completed match
+            playersInMatch.forEach(input => {
+                input.readOnly = true;
+                input.style.pointerEvents = 'none'; // Make them non-clickable
+            });
+
+            // Progress winner to next round
+            if (winnerTarget === 'Winner') {
+                const finalWinnerInput = document.querySelector('.final-winner-input');
+                if (finalWinnerInput) {
+                    finalWinnerInput.value = winnerName;
+                    finalWinnerInput.classList.add('winner');
+                    finalWinnerInput.style.pointerEvents = 'none';
+                    // Trigger final line animation
+                    const lineId = nextRoundTargets[matchId].lineId;
+                    if (lineId) {
+                        document.getElementById(lineId).classList.add('active');
+                    }
+                }
+            } else {
+                const [targetMatchId, targetPlayerSlot] = winnerTarget.split('-'); // e.g., 'R2A', 'P1'
+                const targetMatch = document.getElementById(targetMatchId);
+                if (targetMatch) {
+                    const targetInput = targetMatch.querySelector(`.player-input[data-player-id="${targetPlayerSlot.replace('P', '')}"]`);
+                    if (targetInput) {
+                        targetInput.value = winnerName;
+                        // Enable editing for the next round's inputs if they are not readonly
+                        targetInput.readOnly = false;
+                        targetInput.style.pointerEvents = 'auto';
+
+                        // Check if the target match now has both players
+                        const nextMatchInputs = targetMatch.querySelectorAll('.player-input.winner-input');
+                        const nextMatchReady = Array.from(nextMatchInputs).every(input => input.value.trim() !== '');
+
+                        if (nextMatchReady) {
+                            updateVsText(targetMatch);
+                            toggleWinnerButton(targetMatch); // Activate winner button for the next match
+                        }
+                    }
+                }
+                
+                // Activate relevant line segments
+                const lineId = nextRoundTargets[matchId].lineId;
+                if (lineId) {
+                    document.getElementById(lineId).classList.add('active');
+                }
+            }
+        });
     });
-});
 
-// Keyframe for text pop-in effect
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = `
-    @keyframes textPopIn {
-        0% { transform: scale(0.9); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    @keyframes inputFadeIn {
-        to { opacity: 1; transform: translateY(0); }
-    }
-`;
-document.head.appendChild(styleSheet);
+    // Initial load animations (optional)
+    const initialAnimate = () => {
+        const matches = document.querySelectorAll('.match');
+        matches.forEach((match, index) => {
+            match.style.animationDelay = `${index * 0.1}s`; // Staggered animation
+            match.style.opacity = 0; // Start hidden
+            match.style.transform = 'translateY(20px)'; // Start slightly below
+            match.style.animation = 'matchFadeIn 0.8s forwards ease-out';
+        });
+    };
+
+    // Append CSS keyframes for dynamic animations
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+        @keyframes matchFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+    initialAnimate(); // Run initial animation on page load
+});
