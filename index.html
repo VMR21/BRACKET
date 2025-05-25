@@ -8,34 +8,32 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1 class="title">Project Gamba Tournament</h1>
-    <div class="bracket-wrapper">
-      <div class="bracket">
-        <div class="round round-1">
-          <div class="match"><input placeholder="Player 1" /><input placeholder="Mult 1" /><input placeholder="Player 2" /><input placeholder="Mult 2" /><div class="winner" data-next="0"></div></div>
-          <div class="match"><input placeholder="Player 3" /><input placeholder="Mult 3" /><input placeholder="Player 4" /><input placeholder="Mult 4" /><div class="winner" data-next="0"></div></div>
-          <div class="match"><input placeholder="Player 5" /><input placeholder="Mult 5" /><input placeholder="Player 6" /><input placeholder="Mult 6" /><div class="winner" data-next="1"></div></div>
-          <div class="match"><input placeholder="Player 7" /><input placeholder="Mult 7" /><input placeholder="Player 8" /><input placeholder="Mult 8" /><div class="winner" data-next="1"></div></div>
-        </div>
+  <h1 class="title">Project Gamba Tournament</h1>
+  <div class="bracket-container">
+    <svg class="lines" viewBox="0 0 1000 600">
+      <!-- Round 1 to Round 2 -->
+      <line x1="250" y1="75" x2="350" y2="100" />
+      <line x1="250" y1="175" x2="350" y2="150" />
+      <line x1="250" y1="275" x2="350" y2="300" />
+      <line x1="250" y1="375" x2="350" y2="350" />
+      <!-- Round 2 to Final -->
+      <line x1="450" y1="125" x2="550" y2="200" />
+      <line x1="450" y1="325" x2="550" y2="200" />
+    </svg>
 
-        <div class="round round-2">
-          <div class="match"><div class="slot" id="r2m1p1"></div><div class="slot" id="r2m1p2"></div><div class="winner" data-next="0"></div></div>
-          <div class="match"><div class="slot" id="r2m2p1"></div><div class="slot" id="r2m2p2"></div><div class="winner" data-next="1"></div></div>
-        </div>
-
-        <div class="round round-3">
-          <div class="match"><div class="slot" id="final1"></div><div class="slot" id="final2"></div><div class="winner">CHAMPION</div></div>
-        </div>
-      </div>
-
-      <div class="sidebar">
-        <img src="https://i.ibb.co/yf3gzzp/promo.png" class="promo" />
-        <img src="https://i.ibb.co/Cw1PYSL/gamba-logo.png" class="logo" />
-        <img src="https://i.ibb.co/h1FWzGZ/rainbet.png" class="rainbet" />
-      </div>
+    <div class="round r1">
+      <div class="match" style="top: 50px;">Player 1</div>
+      <div class="match" style="top: 150px;">Player 2</div>
+      <div class="match" style="top: 250px;">Player 3</div>
+      <div class="match" style="top: 350px;">Player 4</div>
+    </div>
+    <div class="round r2">
+      <div class="match" style="top: 100px;">Winner 1</div>
+      <div class="match" style="top: 300px;">Winner 2</div>
+    </div>
+    <div class="round r3">
+      <div class="match" style="top: 200px;">CHAMPION</div>
     </div>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
