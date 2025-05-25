@@ -59,7 +59,7 @@ body {
     padding: 40px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     display: flex;
-    gap: 40px;
+    gap: 40px; /* Added gap back for sidebar */
     position: relative;
     max-width: 1600px;
     width: 100%;
@@ -111,13 +111,14 @@ body {
 
 .bracket-grid {
     display: grid;
-    grid-template-columns: 200px 200px 200px 200px; /* Fixed column widths for better SVG alignment */
-    gap: 20px 80px; /* Vertical gap, Horizontal gap (between columns) */
-    width: 100%;
-    height: 100%; /* Occupy height of bracket-main-area */
+    /* Using fractional units and max-width for better responsiveness */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px 5%; /* Vertical gap, Horizontal gap (between columns) */
+    width: 100%; /* Take full width of bracket-main-area */
+    max-width: 900px; /* Limit overall bracket width for better appearance */
+    height: 100%;
     position: relative;
-    z-index: 10; /* Above SVG lines */
-    /* Center the grid within its area */
+    z-index: 10;
     justify-content: center;
     align-items: center;
 }
@@ -128,22 +129,27 @@ body {
     justify-content: space-around; /* Distribute matches evenly */
     gap: 30px; /* Space between matches in a round */
     height: 100%; /* Make rounds fill vertical space */
-    position: relative; /* For precise match positioning */
+    position: relative;
 }
 
-/* Precise vertical positioning for matches to align with SVG paths */
-/* The top-left corner of each match box needs to be considered for SVG alignment */
-.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105, height=100 -> top=55, center=105 */
-.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; } /* Y=295 */
-.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; } /* Y=395 */
-.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; } /* Y=585 */
+/* IMPORTANT: Removed specific margin-top/bottom for each match.
+   The `justify-content: space-around` on `.round` and the `height: 100%`
+   on `.round` will handle vertical distribution automatically.
+   The SVG lines will likely need manual adjustment in `index.html`
+   if exact alignment is crucial, as their paths are hardcoded. */
+/*
+.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; }
+.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; }
+.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; }
+.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; }
 
-.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; } /* Y=205 */
-.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; } /* Y=495 */
+.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; }
+.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; }
 
-.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; } /* Y=395 */
+.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; }
 
 .winner-round .match { align-self: center; margin-top: 0; margin-bottom: 0; }
+*/
 
 
 .match {
@@ -340,7 +346,7 @@ body {
     100% { stroke: var(--line-glow); filter: drop-shadow(0 0 15px var(--line-glow)); }
 }
 
-/* Sidebar Styling - Same as before */
+/* Sidebar Styling */
 .sidebar {
     width: 280px;
     flex-shrink: 0;
@@ -363,7 +369,9 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-.logo-section { text-align: center; }
+.logo-section {
+    text-align: center;
+}
 
 .gamba-logo {
     width: 180px;
@@ -411,13 +419,17 @@ body {
     margin-bottom: 10px;
 }
 
-.boost-text {
-    font-size: 1.8em;
+/* Specific styling for the new wager race text */
+.wager-race {
+    font-family: 'Orbitron', sans-serif; /* Using Orbitron for cool text */
+    font-size: 2em; /* Larger size */
     font-weight: 700;
-    color: #fff;
-    line-height: 1.2;
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    color: var(--highlight-color); /* Bright color */
+    text-shadow: 0 0 10px var(--highlight-color), 0 0 20px rgba(255, 255, 0, 0.5); /* Glow effect */
+    margin-top: 15px; /* Add some space above */
+    line-height: 1.2; /* Adjust line height for multiline text */
 }
+
 
 /* Responsive adjustments */
 @media (max-width: 1400px) {
@@ -494,5 +506,6 @@ body {
     .match { padding: 8px; height: auto; min-height: 90px; }
     .decide-winner-btn { padding: 6px 12px; font-size: 0.8em; }
     .promo-code { font-size: 1.8em; }
-    .boost-text { font-size: 1.5em; }
+    /* Adjust for wager-race on smaller screens if needed */
+    .wager-race { font-size: 1.5em; }
 }
