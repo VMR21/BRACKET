@@ -1,24 +1,32 @@
 body {
   margin: 0;
-  padding: 0;
+  background: #0a0a0a url('https://i.ibb.co/7yz5H7B/bg-grid.png') repeat center;
   font-family: 'Orbitron', sans-serif;
-  background: url('https://i.ibb.co/7yz5H7B/bg-grid.png') repeat center center;
-  background-size: cover;
-  color: #fff;
+  color: #0ff;
+  overflow-x: hidden;
+}
+
+.container {
+  padding: 2rem;
 }
 
 .title {
   text-align: center;
-  font-size: 2.5rem;
-  margin-top: 20px;
-  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+  font-size: 3rem;
+  text-shadow: 0 0 10px #0ff;
+}
+
+.bracket-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  align-items: flex-start;
+  padding-top: 2rem;
 }
 
 .bracket {
   display: flex;
-  justify-content: center;
-  padding: 2rem;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .round {
@@ -28,26 +36,44 @@ body {
 }
 
 .match {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  background: rgba(0, 255, 255, 0.05);
+  border: 2px solid #0ff;
   padding: 1rem;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.match:hover {
-  transform: scale(1.05);
+  min-width: 200px;
+  box-shadow: 0 0 10px #0ff88f;
+  transition: 0.3s;
 }
 
 input {
+  width: 100%;
+  margin-bottom: 0.4rem;
+  padding: 0.3rem;
   background: #000;
   border: 1px solid #0ff;
-  padding: 0.4rem;
-  border-radius: 5px;
+  border-radius: 4px;
   color: #0ff;
   text-align: center;
+}
+
+.slot, .winner {
+  background: #000;
+  border: 1px dashed #0ff;
+  padding: 0.5rem;
+  margin-top: 0.4rem;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.sidebar img {
+  width: 200px;
+  max-width: 100%;
+  border-radius: 10px;
 }
