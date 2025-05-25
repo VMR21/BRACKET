@@ -2,40 +2,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerInputs = document.querySelectorAll('.player-input');
     const multiplierInputs = document.querySelectorAll('.multiplier-input');
     const decideWinnerButtons = document.querySelectorAll('.decide-winner-btn');
-    const vsTexts = document.querySelectorAll('.vs-text');
 
-    // Mapping for match progression and line activation
-    const progressionMap = {
-        'R1A': { nextMatchId: 'R2A', nextPlayerSlot: '1', lineId: 'line-R1A-R2A-1' },
-        'R1B': { nextMatchId: 'R2A', nextPlayerSlot: '2', lineId: 'line-R1B-R2A-2' },
-        'R1C': { nextMatchId: 'R2B', nextPlayerSlot: '1', lineId: 'line-R1C-R2B-1' },
-        'R1D': { nextMatchId: 'R2B', nextPlayerSlot: '2', lineId: 'line-R1D-R2B-2' },
-        'R2A': { nextMatchId: 'R3A', nextPlayerSlot: '1', lineId: 'line-R2A-R3A-1' },
-        'R2B': { nextMatchId: 'R3A', nextPlayerSlot: '2', lineId: 'line-R2B-R3A-2' },
-        'R3A': { nextMatchId: 'Winner', nextPlayerSlot: '1', lineId: 'line-R3A-Winner' }
-    };
-
-    // Helper to get match element from an input
-    const getMatchElement = (input) => input.closest('.match');
+    // Helper to get match element from an input or button
+    const getMatchElement = (element) => element.closest('.match');
 
     // Check if player name and multiplier are both entered
     const arePlayerInputsComplete = (matchElement) => {
-        const player1NameInput = matchElement.querySelector('.player-input[data-player-id="1"]');
-        const player1MultiplierInput = matchElement.querySelector('.multiplier-input[data-player-id="1"]');
-        const player2NameInput = matchElement.querySelector('.player-input[data-player-id="2"]');
-        const player2MultiplierInput = matchElement.querySelector('.multiplier-input[data-player-id="2"]');
+        const playerInputsInMatch = matchElement.querySelectorAll('.player-input:not([readonly])');
+        const multiplierInputsInMatch = matchElement.querySelectorAll('.multiplier-input:not([readonly])');
 
-        const isPlayer1Complete = player1NameInput && player1MultiplierInput &&
-                                  player1NameInput.value.trim() !== '' && player1MultiplierInput.value.trim() !== '';
-        const isPlayer2Complete = player2NameInput && player2MultiplierInput &&
-                                  player2NameInput.value.trim() !== '' && player2MultiplierInput.value.trim() !== '';
+        if (playerInputsInMatch.length === 0) return false; // No editable players in this match (e.g., winner box)
 
-        // For winner display box, only check the single input
-        if (matchElement.id === 'match-Winner') {
-            return player1NameInput && player1NameInput.value.trim() !== '';
+        let allComplete = true;
+        for (let i = 0; i < playerInputsInMatch.length; i++) {
+            if (playerInputsInMatch[i].value.trim() === '' || 
+                (multiplierInputsInMatch[i] && multiplierInputsInMatch[i].value.trim() === '')) {
+                allComplete = false;
+                break;
+            }
         }
-
-        return isPlayer1Complete && isPlayer2Complete;
+        return allComplete;
     };
 
     // Toggle visibility/activity of the "Decide Winner" button
@@ -50,42 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Event listeners for all player and multiplier inputs
+    // Add input event listeners to all player and multiplier fields
     playerInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const currentMatch = getMatchElement(input);
-            if (currentMatch) {
-                toggleDecideWinnerButton(currentMatch);
-            }
-        });
-        input.addEventListener('focus', () => {
-            input.style.boxShadow = '0 0 10px var(--glow-color)';
-        });
-        input.addEventListener('blur', () => {
-            input.style.boxShadow = '';
-        });
+        input.addEventListener('input', () => toggleDecideWinnerButton(getMatchElement(input)));
+        input.addEventListener('focus', () => input.style.boxShadow = '0 0 10px var(--glow-color)');
+        input.addEventListener('blur', () => input.style.boxShadow = '');
     });
 
     multiplierInputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const currentMatch = getMatchElement(input);
-            if (currentMatch) {
-                toggleDecideWinnerButton(currentMatch);
-            }
-        });
-        input.addEventListener('focus', () => {
-            input.style.boxShadow = '0 0 10px var(--glow-color)';
-        });
-        input.addEventListener('blur', () => {
-            input.style.boxShadow = '';
-        });
+        input.addEventListener('input', () => toggleDecideWinnerButton(getMatchElement(input)));
+        input.addEventListener('focus', () => input.style.boxShadow = '0 0 10px var(--glow-color)');
+        input.addEventListener('blur', () => input.style.boxShadow = '');
     });
 
     // Event listeners for "Decide Winner" buttons
     decideWinnerButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const matchId = button.dataset.matchId;
-            const currentMatch = document.getElementById(matchId);
+            const currentMatch = getMatchElement(button);
+            const matchId = currentMatch.id;
 
             const player1NameInput = currentMatch.querySelector('.player-input[data-player-id="1"]');
             const player1MultiplierInput = currentMatch.querySelector('.multiplier-input[data-player-id="1"]');
@@ -93,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const player2MultiplierInput = currentMatch.querySelector('.multiplier-input[data-player-id="2"]');
 
             const player1Name = player1NameInput ? player1NameInput.value.trim() : '';
-            const player1Multiplier = player1MultiplierInput ? parseFloat(player1MultiplierInput.value) : 0;
+            const player1Multiplier = player1MultiplierInput ? parseFloat(player1MultiplierInput.value) : NaN;
             const player2Name = player2NameInput ? player2NameInput.value.trim() : '';
-            const player2Multiplier = player2MultiplierInput ? parseFloat(player2MultiplierInput.value) : 0;
+            const player2Multiplier = player2MultiplierInput ? parseFloat(player2MultiplierInput.value) : NaN;
 
             if (!player1Name || isNaN(player1Multiplier) || !player2Name || isNaN(player2Multiplier)) {
                 alert('Please enter names and valid multipliers for both players.');
@@ -104,31 +72,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let winnerName = '';
             let winnerMultiplier = 0;
-            let winningPlayerId = '';
+            let winnerPlayerId = '';
 
             if (player1Multiplier > player2Multiplier) {
                 winnerName = player1Name;
                 winnerMultiplier = player1Multiplier;
-                winningPlayerId = '1';
+                winnerPlayerId = '1';
             } else if (player2Multiplier > player1Multiplier) {
                 winnerName = player2Name;
                 winnerMultiplier = player2Multiplier;
-                winningPlayerId = '2';
+                winnerPlayerId = '2';
             } else {
-                // Tie-breaker: If multipliers are equal, Player 1 wins (can be customized)
-                alert('Multipliers are equal! Player 1 wins by default (can be customized).');
+                // Tie-breaker: If multipliers are equal, Player 1 wins by default.
+                // You could add more complex logic here (e.g., random, user choice).
+                alert('Multipliers are equal! Player 1 wins by default.');
                 winnerName = player1Name;
                 winnerMultiplier = player1Multiplier;
-                winningPlayerId = '1';
+                winnerPlayerId = '1';
             }
 
-            // Apply winner styling to inputs in the current match
-            player1NameInput.classList.remove('winner');
-            player1MultiplierInput.classList.remove('winner');
-            player2NameInput.classList.remove('winner');
-            player2MultiplierInput.classList.remove('winner');
+            // Remove previous winner highlights and apply to current winner
+            currentMatch.querySelectorAll('.player-input, .multiplier-input').forEach(input => {
+                input.classList.remove('winner');
+            });
 
-            if (winningPlayerId === '1') {
+            if (winnerPlayerId === '1') {
                 player1NameInput.classList.add('winner');
                 player1MultiplierInput.classList.add('winner');
             } else {
@@ -136,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 player2MultiplierInput.classList.add('winner');
             }
 
-            // Mark match as completed
+            // Mark current match as completed
             button.classList.remove('active');
             button.classList.add('match-completed');
             currentMatch.classList.add('completed');
@@ -148,35 +116,45 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Progress winner to the next round
-            const nextRoundData = progressionMap[matchId];
-            if (nextRoundData) {
-                const targetMatch = document.getElementById(nextRoundData.nextMatchId);
+            const nextMatchId = currentMatch.dataset.nextMatch;
+            const nextSlot = currentMatch.dataset.nextSlot;
+            const targetLineId = `line-${matchId}-${nextMatchId}-${nextSlot}`; // Construct line ID
+
+            if (nextMatchId === 'Winner') {
+                const finalWinnerInput = document.querySelector('.final-winner-input');
+                if (finalWinnerInput) {
+                    finalWinnerInput.value = winnerName;
+                    finalWinnerInput.classList.add('winner');
+                    finalWinnerInput.style.pointerEvents = 'none';
+                    // Activate final line
+                    const finalLine = document.getElementById(targetLineId);
+                    if (finalLine) finalLine.classList.add('active');
+                }
+            } else {
+                const targetMatch = document.getElementById(nextMatchId);
                 if (targetMatch) {
-                    const targetPlayerInput = targetMatch.querySelector(`.player-input[data-player-id="${nextRoundData.nextPlayerSlot}"]`);
-                    const targetMultiplierInput = targetMatch.querySelector(`.multiplier-input[data-player-id="${nextRoundData.nextPlayerSlot}"]`);
+                    const targetPlayerInput = targetMatch.querySelector(`.player-input[data-player-id="${nextSlot}"]`);
+                    const targetMultiplierInput = targetMatch.querySelector(`.multiplier-input[data-player-id="${nextSlot}"]`);
 
                     if (targetPlayerInput) {
                         targetPlayerInput.value = winnerName;
-                        if (targetMultiplierInput) {
-                            targetMultiplierInput.value = winnerMultiplier;
-                        }
-                        // Re-enable editing for the next round's inputs that were populated
-                        targetPlayerInput.readOnly = false;
+                        targetPlayerInput.readOnly = false; // Make it editable for the next round
                         targetPlayerInput.style.pointerEvents = 'auto';
-                        if (targetMultiplierInput) {
-                            targetMultiplierInput.readOnly = false;
-                            targetMultiplierInput.style.pointerEvents = 'auto';
-                        }
-
-                        // Check if the target match is now ready for winner decision
-                        toggleDecideWinnerButton(targetMatch);
                     }
-                }
+                    if (targetMultiplierInput) {
+                        targetMultiplierInput.value = winnerMultiplier;
+                        targetMultiplierInput.readOnly = false; // Make it editable for the next round
+                        targetMultiplierInput.style.pointerEvents = 'auto';
+                    }
 
-                // Activate relevant line segment
-                const line = document.getElementById(nextRoundData.lineId);
-                if (line) {
-                    line.classList.add('active');
+                    // Activate relevant line segment
+                    const line = document.getElementById(targetLineId);
+                    if (line) {
+                        line.classList.add('active');
+                    }
+
+                    // Check if the target match is now ready for winner decision
+                    toggleDecideWinnerButton(targetMatch);
                 }
             }
         });
