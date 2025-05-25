@@ -132,16 +132,16 @@ body {
 }
 
 /* Precise vertical positioning for matches to align with SVG paths */
-/* These values are highly calibrated for the given SVG paths and match box size */
-.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105 center */
-.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; } /* Y=295 center */
-.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; } /* Y=395 center */
-.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; } /* Y=585 center */
+/* The top-left corner of each match box needs to be considered for SVG alignment */
+.round-1 .match:nth-child(1) { align-self: flex-start; margin-top: 50px; } /* Y=105, height=100 -> top=55, center=105 */
+.round-1 .match:nth-child(2) { align-self: flex-start; margin-top: 240px; } /* Y=295 */
+.round-1 .match:nth-child(3) { align-self: flex-end; margin-bottom: 240px; } /* Y=395 */
+.round-1 .match:nth-child(4) { align-self: flex-end; margin-bottom: 50px; } /* Y=585 */
 
-.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; } /* Y=205 center */
-.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; } /* Y=495 center */
+.round-2 .match:nth-child(1) { align-self: flex-start; margin-top: 155px; } /* Y=205 */
+.round-2 .match:nth-child(2) { align-self: flex-end; margin-bottom: 155px; } /* Y=495 */
 
-.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; } /* Y=395 center */
+.round-3 .match:nth-child(1) { align-self: center; margin-top: 0; margin-bottom: 0; } /* Y=395 */
 
 .winner-round .match { align-self: center; margin-top: 0; margin-bottom: 0; }
 
