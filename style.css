@@ -9,6 +9,9 @@
     --input-border: rgba(255, 255, 255, 0.2);
     --input-focus-border: var(--secondary-color);
     --glow-color: var(--secondary-color);
+    --highlight-color: #ffee00; /* Yellow for winner */
+    --line-color: rgba(0, 224, 255, 0.5); /* Semi-transparent cyan */
+    --line-glow: #00e0ff; /* Bright cyan for line glow */
 }
 
 * {
@@ -21,12 +24,13 @@
 body {
     background: linear-gradient(135deg, #0d0a20, #2a0b3b);
     color: var(--text-color);
-    overflow: hidden; /* Hide overflow for background animation */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
+    position: relative;
 }
 
 /* Background Animation */
@@ -44,29 +48,20 @@ body {
 }
 
 @keyframes backgroundPulse {
-    0% {
-        transform: scale(1);
-        opacity: 0.7;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0.7;
-    }
+    0% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0.7; }
 }
 
 .container {
-    background: rgba(13, 10, 32, 0.7); /* Slightly darker, semi-transparent */
+    background: rgba(13, 10, 32, 0.7);
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     display: flex;
     gap: 40px;
     position: relative;
-    max-width: 1400px;
+    max-width: 1600px; /* Increased max-width for more rounds */
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateY(20px);
@@ -75,10 +70,7 @@ body {
 }
 
 @keyframes fadeInUp {
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 .title {
@@ -105,45 +97,40 @@ body {
 }
 
 @keyframes textGlow {
-    0% {
-        text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(122, 59, 255, 0.5);
-    }
-    100% {
-        text-shadow: 0 0 25px var(--primary-color), 0 0 40px rgba(122, 59, 255, 0.8);
-    }
+    0% { text-shadow: 0 0 15px var(--primary-color), 0 0 30px rgba(122, 59, 255, 0.5); }
+    100% { text-shadow: 0 0 25px var(--primary-color), 0 0 40px rgba(122, 59, 255, 0.8); }
+}
+
+.bracket-main-area {
+    flex-grow: 1;
+    position: relative;
+    padding-top: 80px; /* Space for title */
 }
 
 .bracket-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* R1, R2, Final */
+    /* 4 columns for R1, R2, R3, Winner */
+    grid-template-columns: repeat(4, 1fr); 
     gap: 20px 80px; /* Vertical gap, Horizontal gap */
-    flex-grow: 1; /* Allows it to take available space */
+    width: 100%;
+    height: 100%; /* Occupy height of bracket-main-area */
     position: relative;
-    padding-top: 80px; /* Space for title */
+    z-index: 10; /* Above SVG lines */
 }
 
 .round {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    gap: 20px;
-    position: relative;
-    padding-right: 40px; /* Space for lines */
+    justify-content: space-around; /* Distribute matches evenly */
+    gap: 30px; /* Space between matches in a round */
+    height: 100%; /* Make rounds fill vertical space */
 }
 
-.round-1 {
-    grid-column: 1 / 2;
-}
-
-.round-2 {
-    grid-column: 2 / 3;
-    justify-content: center; /* Center the two matches */
-}
-
-.final-round {
-    grid-column: 3 / 4;
-    justify-content: center; /* Center the final match */
-}
+/* Specific positioning for rounds to align with SVG */
+.round-1 { grid-column: 1 / 2; }
+.round-2 { grid-column: 2 / 3; }
+.round-3 { grid-column: 3 / 4; }
+.winner-round { grid-column: 4 / 5; }
 
 .match {
     background: var(--input-bg);
@@ -152,11 +139,16 @@ body {
     padding: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    position: relative;
-    z-index: 10; /* Ensure matches are above lines */
+    min-width: 180px; /* Ensure all boxes are similar width */
+    max-width: 220px; /* Max width for consistency */
+    width: 100%; /* Take available width */
+    height: 100px; /* Fixed height for all match boxes */
+    justify-content: center; /* Center content vertically */
+    position: relative; /* For winner button positioning */
 }
 
 .match:hover {
@@ -165,19 +157,26 @@ body {
     border-color: var(--glow-color);
 }
 
-.player-input {
+.player-entry {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space for 'vs' text */
     width: 100%;
-    padding: 12px 15px;
+    justify-content: center;
+}
+
+.player-input {
+    flex-grow: 1; /* Allow inputs to take available space */
+    padding: 8px 10px;
     background: transparent;
     border: 1px solid var(--input-border);
     border-radius: 6px;
     color: var(--text-color);
-    font-size: 1.1em;
+    font-size: 0.95em;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     text-align: center;
-    position: relative;
-    z-index: 1; /* For glowing effect */
+    min-width: 0; /* Allow shrinking */
 }
 
 .player-input::placeholder {
@@ -189,83 +188,113 @@ body {
     box-shadow: 0 0 10px var(--glow-color);
 }
 
-/* Dynamic line drawing (simplified, for a "million dollar" look, you'd use SVG or canvas) */
-/* These are just visual representations, not connected to JS logic */
-.bracket-grid::before,
-.bracket-grid::after {
-    content: '';
-    position: absolute;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    box-shadow: 0 0 10px var(--glow-color);
-    z-index: 5;
-    opacity: 0.8;
+/* Winner input specific style */
+.player-input.winner {
+    background: rgba(255, 255, 0, 0.1); /* Slightly yellow tint for winner */
+    color: var(--highlight-color);
+    border-color: var(--highlight-color);
+    text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);
 }
 
-/* Lines for Round 1 to Round 2 */
-.bracket-grid::before {
-    width: 4px; /* Thickness of lines */
-    height: calc(100% - 180px); /* Adjust height to match bracket structure */
-    top: 130px; /* Position from top */
-    left: calc(33.33% + 20px); /* Between R1 and R2 */
+/* Final Winner Input */
+.final-winner-input {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--highlight-color);
+    text-shadow: 0 0 10px var(--highlight-color), 0 0 20px rgba(255, 255, 0, 0.5);
+    border-color: var(--highlight-color) !important;
+    background: rgba(255, 255, 0, 0.15) !important;
+}
+
+.vs-text {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.5);
+    display: none; /* Hidden by default, shown by JS */
+}
+
+.vs-text.active {
+    display: inline;
+}
+
+.select-winner {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 8px 15px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    position: absolute;
+    bottom: -15px; /* Position below the box */
+    left: 50%;
     transform: translateX(-50%);
+    opacity: 0; /* Hidden by default */
+    pointer-events: none; /* Disable interaction when hidden */
 }
 
-/* Lines for Round 2 to Final */
-.bracket-grid::after {
-    width: 4px; /* Thickness of lines */
-    height: calc(50% - 50px); /* Adjust height */
-    top: calc(50% + 50px); /* Position */
-    left: calc(66.66% + 20px); /* Between R2 and Final */
-    transform: translateX(-50%);
+.select-winner.active {
+    opacity: 1;
+    pointer-events: all;
+    animation: bounceIn 0.5s ease-out;
 }
 
-/* More complex lines would involve pseudo-elements per match or SVG paths */
-.match:nth-child(odd)::before {
-    /* Line from top player to right */
-    content: '';
+.select-winner:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+    filter: brightness(1.1);
+}
+
+.select-winner:active {
+    transform: translateX(-50%) translateY(0px);
+    filter: brightness(0.9);
+}
+
+@keyframes bounceIn {
+    0% { transform: translateX(-50%) scale(0.7); opacity: 0; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+    100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}
+
+/* SVG Lines */
+.bracket-lines {
     position: absolute;
-    right: -40px; /* Extends beyond match box */
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    box-shadow: 0 0 8px var(--glow-color);
-    animation: lineDraw 1s forwards ease-out;
-    animation-delay: var(--delay, 0s);
-    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Below matches */
 }
 
-.match:nth-child(even)::before {
-    /* Line from bottom player to right */
-    content: '';
-    position: absolute;
-    right: -40px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    box-shadow: 0 0 8px var(--glow-color);
-    animation: lineDraw 1s forwards ease-out;
-    animation-delay: var(--delay, 0s);
-    opacity: 0;
+.bracket-line {
+    fill: none;
+    stroke: var(--line-color);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.5s ease, stroke-width 0.5s ease, filter 0.5s ease;
+    filter: drop-shadow(0 0 5px rgba(0, 224, 255, 0.2));
 }
 
-@keyframes lineDraw {
-    from {
-        width: 0;
-        opacity: 0;
-    }
-    to {
-        width: 40px; /* Or whatever target width */
-        opacity: 1;
-    }
+.bracket-line.active {
+    stroke: var(--line-glow);
+    stroke-width: 4;
+    filter: drop-shadow(0 0 8px var(--line-glow)) drop-shadow(0 0 15px var(--line-glow));
+    animation: linePulse 2s infinite alternate;
 }
 
-/* Sidebar Styling */
+@keyframes linePulse {
+    0% { stroke: var(--line-glow); filter: drop-shadow(0 0 8px var(--line-glow)); }
+    100% { stroke: var(--line-glow); filter: drop-shadow(0 0 15px var(--line-glow)); }
+}
+
+/* Sidebar Styling - Same as before */
 .sidebar {
-    width: 280px; /* Fixed width for sidebar */
+    width: 280px;
     flex-shrink: 0;
     background: rgba(13, 10, 32, 0.8);
     border-radius: 15px;
@@ -279,40 +308,26 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     transform: translateX(20px);
     opacity: 0;
-    animation: fadeInRight 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s; /* Delayed fade-in */
+    animation: fadeInRight 1s forwards cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
 }
 
 @keyframes fadeInRight {
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+    to { transform: translateX(0); opacity: 1; }
 }
 
-.logo-section {
-    text-align: center;
-}
+.logo-section { text-align: center; }
 
 .gamba-logo {
-    width: 180px; /* Adjust size as needed */
+    width: 180px;
     height: auto;
     filter: drop-shadow(0 0 15px var(--glow-color));
     animation: logoPulse 4s infinite ease-in-out alternate;
 }
 
 @keyframes logoPulse {
-    0% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 15px var(--glow-color));
-    }
-    50% {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 25px var(--glow-color));
-    }
-    100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 15px var(--glow-color));
-    }
+    0% { transform: scale(1); filter: drop-shadow(0 0 15px var(--glow-color)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--glow-color)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 15px var(--glow-color)); }
 }
 
 .code-section {
@@ -324,4 +339,100 @@ body {
     width: 100%;
     transform: scale(0.9);
     opacity: 0;
-    animation: popIn 0.6s forwards cubic-bezier(0.68, -0.5
+    animation: popIn 0.6s forwards cubic-bezier(0.68, -0.55, 0.265, 1.55) 1s;
+}
+
+@keyframes popIn {
+    to { transform: scale(1); opacity: 1; }
+}
+
+.use-code-text {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.promo-code {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    margin-bottom: 10px;
+}
+
+.boost-text {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+    .container {
+        flex-direction: column;
+        padding: 30px;
+        gap: 30px;
+    }
+    .bracket-grid {
+        grid-template-columns: 1fr;
+        gap: 40px 0;
+        height: auto; /* Allow height to adjust */
+    }
+    .round {
+        align-items: center;
+        gap: 20px;
+    }
+    .round-1, .round-2, .round-3, .winner-round {
+        grid-column: auto;
+    }
+    .match {
+        max-width: 280px; /* Allow wider for single column */
+        height: auto; /* Auto height for content */
+        min-height: 80px;
+        flex-direction: row; /* Horizontal layout for inputs */
+        flex-wrap: wrap; /* Wrap if too many inputs */
+        justify-content: center;
+    }
+    .player-entry {
+        flex-basis: 100%; /* Take full width */
+        justify-content: center;
+    }
+    .player-input {
+        flex-basis: 45%; /* Approx half width for inputs */
+    }
+    .select-winner {
+        position: static; /* Position normally */
+        transform: none;
+        margin-top: 10px;
+    }
+    .sidebar {
+        width: 100%;
+        max-width: 400px;
+        margin-top: 40px;
+    }
+    .title {
+        position: static;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 3em;
+    }
+    .bracket-lines { /* Hide SVG lines on smaller screens as layout changes */
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .title { font-size: 2.2em; }
+    .tournament-text { font-size: 0.5em; }
+    .player-input { font-size: 0.9em; padding: 7px 9px; }
+    .container { padding: 15px; border-radius: 10px; }
+    .match { padding: 8px; height: auto; min-height: 70px; }
+    .select-winner { padding: 6px 12px; font-size: 0.8em; }
+    .promo-code { font-size: 1.8em; }
+    .boost-text { font-size: 1.5em; }
+}
