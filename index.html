@@ -1,148 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProjectGamba Tournament - Multiplier</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProjectGamba Tournament - Multiplier</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0a0a1a;
+      color: #fff;
+    }
+
+    .bracket-line {
+      stroke: #00f0ff;
+      stroke-width: 4;
+      fill: none;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 6px #00f0ff);
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-line 2s ease forwards;
+    }
+
+    @keyframes draw-line {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    .bracket-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      padding: 40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px #a0f;
+    }
+
+    .tournament-text {
+      color: #00f0ff;
+    }
+
+    .bracket-main-area {
+      position: relative;
+      flex: 1;
+      padding: 20px;
+    }
+
+    .bracket-grid {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .round {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .match {
+      background: #1a1a2e;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    .player-entry {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .player-input,
+    .multiplier-input {
+      padding: 6px;
+      background: #0f0f1f;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .vs-text {
+      text-align: center;
+      font-weight: bold;
+      color: #888;
+    }
+
+    .decide-winner-btn {
+      margin-top: 5px;
+      padding: 6px 10px;
+      background: #00f0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #1b1b3a, #09091a);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 0, 200, 0.3);
+    }
+
+    .gamba-logo {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 12px #00f0ff;
+    }
+
+    .code-section {
+      color: #fff;
+    }
+
+    .use-code-text {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .promo-code {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #f0f;
+    }
+
+    .wager-race {
+      font-size: 1.3rem;
+      margin-top: 10px;
+      color: #00f0ff;
+    }
+  </style>
 </head>
 <body>
-    <div class="background-animation"></div>
+  <div class="background-animation"></div>
 
-    <div class="container">
-        <h1 class="title">ProjectGamba <span class="tournament-text">TOURNAMENT</span></h1>
+  <div class="container">
+    <div class="bracket-main-area">
+      <h1 class="title">ProjectGamba <span class="tournament-text">TOURNAMENT</span></h1>
 
-        <div class="bracket-main-area">
-            <svg class="bracket-lines" width="100%" height="100%" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid meet">
-                <path id="line-R1A-R2A-1" class="bracket-line" d="M200,105 H280 V220 H380" />
-                <path id="line-R1B-R2A-2" class="bracket-line" d="M200,295 H280 V220" />
+      <!-- Glowing SVG Lines -->
+      <svg class="bracket-lines" width="100%" height="100%" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid meet">
+        <path id="line-R1A-R2A-1" class="bracket-line" d="M200,105 H280 V220 H380" />
+        <path id="line-R1B-R2A-2" class="bracket-line" d="M200,295 H280 V220" />
+        <path id="line-R1C-R2B-1" class="bracket-line" d="M200,395 H280 V510 H380" />
+        <path id="line-R1D-R2B-2" class="bracket-line" d="M200,585 H280 V510" />
+        <path id="line-R2A-R3A-1" class="bracket-line" d="M580,220 H660 V365 H760" />
+        <path id="line-R2B-R3A-2" class="bracket-line" d="M580,510 H660 V365" />
+        <path id="line-R3A-Winner" class="bracket-line" d="M960,365 H1040" />
+      </svg>
 
-                <path id="line-R1C-R2B-1" class="bracket-line" d="M200,395 H280 V510 H380" />
-                <path id="line-R1D-R2B-2" class="bracket-line" d="M200,585 H280 V510" />
-
-                <path id="line-R2A-R3A-1" class="bracket-line" d="M580,220 H660 V365 H760" />
-                <path id="line-R2B-R3A-2" class="bracket-line" d="M580,510 H660 V365" />
-
-                <path id="line-R3A-Winner" class="bracket-line" d="M960,365 H1040" />
-            </svg>
-
-            <div class="bracket-grid">
-                <div class="round round-1">
-                    <div class="match" id="match-R1A" data-round="R1" data-next-match="R2A" data-next-slot="1">
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="1" placeholder="Player 1">
-                            <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="2" placeholder="Player 2">
-                            <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R1A">Decide Winner</button>
-                    </div>
-                    <div class="match" id="match-R1B" data-round="R1" data-next-match="R2A" data-next-slot="2">
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="1" placeholder="Player 3">
-                            <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="2" placeholder="Player 4">
-                            <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R1B">Decide Winner</button>
-                    </div>
-                    <div class="match" id="match-R1C" data-round="R1" data-next-match="R2B" data-next-slot="1">
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="1" placeholder="Player 5">
-                            <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="2" placeholder="Player 6">
-                            <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R1C">Decide Winner</button>
-                    </div>
-                    <div class="match" id="match-R1D" data-round="R1" data-next-match="R2B" data-next-slot="2">
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="1" placeholder="Player 7">
-                            <input type="number" class="multiplier-input" data-player-id="1" placeholder="x">
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input" data-player-id="2" placeholder="Player 8">
-                            <input type="number" class="multiplier-input" data-player-id="2" placeholder="x">
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R1D">Decide Winner</button>
-                    </div>
-                </div>
-
-                <div class="round round-2">
-                    <div class="match" id="match-R2A" data-round="R2" data-next-match="R3A" data-next-slot="1">
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R1A/B" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R1A/B" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R2A">Decide Winner</button>
-                    </div>
-                    <div class="match" id="match-R2B" data-round="R2" data-next-match="R3A" data-next-slot="2">
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R1C/D" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R1C/D" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R2B">Decide Winner</button>
-                    </div>
-                </div>
-
-                <div class="round round-3">
-                    <div class="match" id="match-R3A" data-round="R3" data-next-match="Winner" data-next-slot="1">
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="1" placeholder="Winner R2A/B" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="1" readonly>
-                        </div>
-                        <span class="vs-text">vs.</span>
-                        <div class="player-entry">
-                            <input type="text" class="player-input winner-input" data-player-id="2" placeholder="Winner R2A/B" readonly>
-                            <input type="number" class="multiplier-input winner-multiplier" data-player-id="2" readonly>
-                        </div>
-                        <button class="decide-winner-btn" data-match-id="R3A">Decide Winner</button>
-                    </div>
-                </div>
-
-                <div class="round winner-round">
-                    <div class="match winner-display" id="match-Winner" data-round="Winner">
-                        <div class="player-entry final-winner-entry">
-                            <input type="text" class="player-input final-winner-input" placeholder="Tournament Champion" readonly>
-                        </div>
-                    </div>
-                </div>
+      <!-- Bracket Match Structure -->
+      <div class="bracket-grid">
+        <!-- Round 1 -->
+        <div class="round round-1">
+          <div class="match" id="match-R1A">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 1">
+              <input type="number" class="multiplier-input" placeholder="x">
             </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 2">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
+
+          <div class="match" id="match-R1B">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 3">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 4">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
+
+          <div class="match" id="match-R1C">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 5">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 6">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
+
+          <div class="match" id="match-R1D">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 7">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Player 8">
+              <input type="number" class="multiplier-input" placeholder="x">
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
         </div>
 
-        <div class="sidebar">
-            <div class="logo-section">
-                <img src="https://files.kick.com/images/user/99806/profile_image/conversion/1ab9ad81-7b12-4589-934c-bee6b3f0a9a9-fullsize.webp" alt="Project Gamba Logo" class="gamba-logo">
+        <!-- Round 2 -->
+        <div class="round round-2">
+          <div class="match" id="match-R2A">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R1A/B" readonly>
+              <input type="number" class="multiplier-input" readonly>
             </div>
-            <div class="code-section">
-                <p class="use-code-text">PRESENTED BY</p>
-                <p class="promo-code">PROJECT</p>
-                <p class="promo-code">GAMBA</p>
-                <p class="wager-race">$200<br>WAGER RACE</p>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R1A/B" readonly>
+              <input type="number" class="multiplier-input" readonly>
             </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
+
+          <div class="match" id="match-R2B">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R1C/D" readonly>
+              <input type="number" class="multiplier-input" readonly>
+            </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R1C/D" readonly>
+              <input type="number" class="multiplier-input" readonly>
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
         </div>
+
+        <!-- Final -->
+        <div class="round round-3">
+          <div class="match" id="match-R3A">
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R2A/B" readonly>
+              <input type="number" class="multiplier-input" readonly>
+            </div>
+            <span class="vs-text">vs.</span>
+            <div class="player-entry">
+              <input type="text" class="player-input" placeholder="Winner R2A/B" readonly>
+              <input type="number" class="multiplier-input" readonly>
+            </div>
+            <button class="decide-winner-btn">Decide Winner</button>
+          </div>
+        </div>
+
+        <!-- Champion -->
+        <div class="round winner-round">
+          <div class="match winner-display" id="match-Winner">
+            <div class="player-entry final-winner-entry">
+              <input type="text" class="player-input final-winner-input" placeholder="Tournament Champion" readonly />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="sidebar">
+      <div class="logo-section">
+        <img src="https://files.kick.com/images/user/99806/profile_image/conversion/1ab9ad81-7b12-4589-934c-bee6b3f0a9a9-fullsize.webp" alt="Project Gamba Logo" class="gamba-logo" />
+      </div>
+      <div class="code-section">
+        <p class="use-code-text">CODE</p>
+        <p class="promo-code">PROJECT</p>
+        <p class="promo-code">GAMBA</p>
+        <p class="wager-race">$200<br/>WAGER RACE</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
