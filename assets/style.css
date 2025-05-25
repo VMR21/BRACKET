@@ -1,11 +1,53 @@
-.neon {
-    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: url('https://i.ibb.co/7yz5H7B/bg-grid.png') repeat center center;
+  background-size: cover;
+  color: #fff;
 }
 
-.match-box {
-    @apply bg-gray-800 border border-gray-600 p-2 rounded-md transition transform hover:scale-105 hover:bg-gray-700;
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 20px;
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+}
+
+.bracket {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.round {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.match {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.match:hover {
+  transform: scale(1.05);
 }
 
 input {
-    @apply w-full p-1 rounded bg-gray-700 text-white text-center;
+  background: #000;
+  border: 1px solid #0ff;
+  padding: 0.4rem;
+  border-radius: 5px;
+  color: #0ff;
+  text-align: center;
 }
